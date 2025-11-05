@@ -533,6 +533,18 @@
             transform: translateY(-1px);
         }
 
+        .button-separator {
+            color: var(--border-color-input);
+            font-size: 16px;
+            margin: 0 8px;
+            user-select: none;
+        }
+
+        body[data-theme="dark"] .button-separator {
+            font-size: 14px;
+            margin: 0 6px;
+        }
+
         .range-slider {
             position: relative;
             height: 30px;
@@ -1019,6 +1031,8 @@
             </div>
             <button class="time-apply-btn" onclick="applyTimeRangeFromInputs()">Apply</button>
             <button class="time-reset-btn" onclick="resetTimeRange()">Reset Range</button>
+            <span class="button-separator">|</span>
+            <button class="time-reset-btn" onclick="exportSelection()">Export Selection</button>
         </div>
     </div>
 
@@ -1547,6 +1561,46 @@
             updateDropdownLabels();
             updateTimeRangeUI();
             applyFilters();
+        }
+
+        // Export filtered logs
+        function exportSelection() {
+            if (filteredLogs.length === 0) {
+                alert('No logs to export. Please load logs and apply filters first.');
+                return;
+            }
+
+            // Generate log content in original format
+            const logContent = filteredLogs.map(log => log.raw).join('\n');
+
+            // Create blob and download
+            const blob = new Blob([logContent], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+
+            // Generate filename with timestamp
+            const now = new Date();
+            const dateStr = formatDateForFilename(now);
+            const filename = `openremote.log.${dateStr}.filtered`;
+
+            link.download = filename;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            URL.revokeObjectURL(url);
+
+            console.log(`Exported ${filteredLogs.length} log entries to ${filename}`);
+        }
+
+        function formatDateForFilename(date) {
+            const year = date.getFullYear();
+            const month = String(date.getMonth() + 1).padStart(2, '0');
+            const day = String(date.getDate()).padStart(2, '0');
+            const hours = String(date.getHours()).padStart(2, '0');
+            const minutes = String(date.getMinutes()).padStart(2, '0');
+            const seconds = String(date.getSeconds()).padStart(2, '0');
+            return `${year}-${month}-${day}_${hours}-${minutes}-${seconds}`;
         }
 
         // Show analysis summary modal

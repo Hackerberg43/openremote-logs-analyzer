@@ -5,17 +5,133 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Portable OpenRemote Log Analyzer</title>
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&display=swap');
+
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
 
+        /* CSS Variables for Light Theme (OpenRemote) */
+        body[data-theme="light"] {
+            --bg-primary: #f5f5f5;
+            --bg-secondary: #ffffff;
+            --bg-tertiary: #fafafa;
+            --border-color: #e0e0e0;
+            --border-color-input: #d0d0d0;
+            --text-primary: #364c4f;
+            --text-secondary: #666;
+            --text-muted: #999;
+            --accent-primary: #c3d500;
+            --accent-hover: #d4e520;
+            --accent-secondary: #e78849;
+            --button-text: #364c4f;
+            --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.15);
+            --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.2);
+            --modal-overlay: rgba(54, 76, 79, 0.8);
+            --log-hover: #f0f0f0;
+            --scrollbar-track: #f0f0f0;
+            --scrollbar-thumb: #c3d500;
+            --scrollbar-thumb-hover: #b4c600;
+            --dropdown-hover: #f0f0f0;
+            --range-track: #e0e0e0;
+            --range-fill: #c3d500;
+            --range-thumb: #c3d500;
+            --empty-icon-opacity: 0.6;
+            --font-family-ui: 'Open Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            --font-family-mono: 'Consolas', 'Monaco', 'Courier New', monospace;
+            --font-size-base: 14px;
+            --font-size-small: 13px;
+            --font-size-header: 28px;
+            --font-size-modal: 24px;
+            --padding-header: 20px 30px;
+            --padding-section: 15px 30px;
+            --padding-button: 10px 24px;
+            --button-radius: 30px;
+            --border-width: 2px;
+            /* Log colors for light theme */
+            --log-timestamp: #2a9d8f;
+            --log-finest: #999;
+            --log-finer: #5b9bd5;
+            --log-fine: #70ad47;
+            --log-config: #7030a0;
+            --log-info: #4472c4;
+            --log-warning: #e78849;
+            --log-severe: #c00000;
+            --log-error: #c00000;
+            --log-source: #7030a0;
+            --log-logger: #666;
+            --log-message: #364c4f;
+            --highlight-bg: #c3d500;
+            --highlight-text: #364c4f;
+            --highlight2-bg: #e78849;
+            --highlight2-text: #ffffff;
+        }
+
+        /* CSS Variables for Dark Theme (Original) */
+        body[data-theme="dark"] {
+            --bg-primary: #1e1e1e;
+            --bg-secondary: #252526;
+            --bg-tertiary: #1e1e1e;
+            --border-color: #3e3e42;
+            --border-color-input: #5a5a5a;
+            --text-primary: #d4d4d4;
+            --text-secondary: #858585;
+            --text-muted: #858585;
+            --accent-primary: #0e639c;
+            --accent-hover: #1177bb;
+            --accent-secondary: #569cd6;
+            --button-text: #ffffff;
+            --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.5);
+            --shadow-md: 0 4px 8px rgba(0, 0, 0, 0.5);
+            --shadow-lg: 0 4px 20px rgba(0, 0, 0, 0.5);
+            --modal-overlay: rgba(0, 0, 0, 0.7);
+            --log-hover: #2a2d2e;
+            --scrollbar-track: #1e1e1e;
+            --scrollbar-thumb: #424242;
+            --scrollbar-thumb-hover: #4e4e4e;
+            --dropdown-hover: #3e3e42;
+            --range-track: #3c3c3c;
+            --range-fill: #0e639c;
+            --range-thumb: #569cd6;
+            --empty-icon-opacity: 1;
+            --font-family-ui: 'Consolas', 'Monaco', 'Courier New', monospace;
+            --font-family-mono: 'Consolas', 'Monaco', 'Courier New', monospace;
+            --font-size-base: 12px;
+            --font-size-small: 11px;
+            --font-size-header: 18px;
+            --font-size-modal: 16px;
+            --padding-header: 10px 15px;
+            --padding-section: 10px 15px;
+            --padding-button: 5px 12px;
+            --button-radius: 3px;
+            --border-width: 1px;
+            /* Log colors for dark theme */
+            --log-timestamp: #4ec9b0;
+            --log-finest: #858585;
+            --log-finer: #9cdcfe;
+            --log-fine: #4ec9b0;
+            --log-config: #dcdcaa;
+            --log-info: #4fc1ff;
+            --log-warning: #ce9178;
+            --log-severe: #f48771;
+            --log-error: #f14c4c;
+            --log-source: #c586c0;
+            --log-logger: #858585;
+            --log-message: #d4d4d4;
+            --highlight-bg: #5a5a0f;
+            --highlight-text: #ffff00;
+            --highlight2-bg: #4a0f5a;
+            --highlight2-text: #ff00ff;
+        }
+
         body {
-            font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
-            font-size: 12px;
-            background: #1e1e1e;
-            color: #d4d4d4;
+            font-family: var(--font-family-ui);
+            font-size: var(--font-size-base);
+            background: var(--bg-primary);
+            color: var(--text-primary);
             height: 100vh;
             display: flex;
             flex-direction: column;
@@ -23,16 +139,51 @@
         }
 
         .header {
-            background: #252526;
-            padding: 10px 15px;
-            border-bottom: 1px solid #3e3e42;
+            background: var(--bg-secondary);
+            padding: var(--padding-header);
+            border-bottom: var(--border-width) solid var(--border-color);
             flex-shrink: 0;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .header-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
         }
 
         .header h1 {
-            font-size: 18px;
-            margin-bottom: 10px;
-            color: #569cd6;
+            font-size: var(--font-size-header);
+            color: var(--text-primary);
+            font-weight: 700;
+            letter-spacing: 0.02em;
+            margin: 0;
+        }
+
+        body[data-theme="dark"] .header h1 {
+            color: var(--accent-secondary);
+        }
+
+        .theme-toggle {
+            background: var(--bg-tertiary);
+            border: var(--border-width) solid var(--border-color-input);
+            padding: 8px 16px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: var(--font-size-base);
+            font-weight: 600;
+            font-family: var(--font-family-ui);
+            color: var(--text-primary);
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .theme-toggle:hover {
+            border-color: var(--accent-primary);
+            transform: translateY(-1px);
         }
 
         .controls {
@@ -45,45 +196,96 @@
         .control-group {
             display: flex;
             align-items: center;
+            gap: 8px;
+        }
+
+        body[data-theme="dark"] .control-group {
             gap: 5px;
         }
 
         label {
-            font-size: 11px;
+            font-size: var(--font-size-base);
+            color: var(--text-primary);
+            font-weight: 600;
+        }
+
+        body[data-theme="dark"] label {
+            font-size: var(--font-size-small);
             color: #9cdcfe;
         }
 
         input[type="text"], input[type="file"] {
+            background: var(--bg-secondary);
+            border: var(--border-width) solid var(--border-color-input);
+            color: var(--text-primary);
+            padding: 8px 12px;
+            border-radius: 4px;
+            font-size: var(--font-size-base);
+            font-family: var(--font-family-ui);
+            transition: border-color 0.2s;
+        }
+
+        body[data-theme="dark"] input[type="text"],
+        body[data-theme="dark"] input[type="file"] {
             background: #3c3c3c;
-            border: 1px solid #5a5a5a;
-            color: #d4d4d4;
             padding: 5px 8px;
+            font-size: var(--font-size-small);
             border-radius: 3px;
-            font-size: 11px;
+        }
+
+        input[type="text"]:focus {
+            outline: none;
+            border-color: var(--accent-primary);
         }
 
         input[type="text"] {
+            min-width: 220px;
+        }
+
+        body[data-theme="dark"] input[type="text"] {
             min-width: 200px;
         }
 
         button {
-            background: #0e639c;
+            background: var(--accent-primary);
             border: none;
-            color: white;
-            padding: 5px 12px;
-            border-radius: 3px;
+            color: var(--button-text);
+            padding: var(--padding-button);
+            border-radius: var(--button-radius);
             cursor: pointer;
-            font-size: 11px;
-            transition: background 0.2s;
+            font-size: var(--font-size-base);
+            font-weight: 600;
+            font-family: var(--font-family-ui);
+            transition: all 0.3s ease;
+            box-shadow: var(--shadow-sm);
+        }
+
+        body[data-theme="dark"] button {
+            font-size: var(--font-size-small);
         }
 
         button:hover {
-            background: #1177bb;
+            background: var(--accent-hover);
+        }
+
+        body[data-theme="light"] button:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+        }
+
+        button:active {
+            transform: translateY(0);
         }
 
         button:disabled {
-            background: #555;
+            background: #ccc;
+            color: #888;
             cursor: not-allowed;
+            transform: none;
+        }
+
+        body[data-theme="dark"] button:disabled {
+            background: #555;
         }
 
         .dropdown {
@@ -92,34 +294,61 @@
         }
 
         .dropdown-button {
-            background: #3c3c3c;
-            border: 1px solid #5a5a5a;
-            color: #d4d4d4;
-            padding: 5px 8px;
+            background: var(--bg-secondary);
+            border: var(--border-width) solid var(--border-color-input);
+            color: var(--text-primary);
+            padding: 8px 12px;
             cursor: pointer;
-            font-size: 11px;
+            font-size: var(--font-size-base);
             display: flex;
             align-items: center;
-            gap: 5px;
+            gap: 8px;
+            border-radius: 4px;
+            font-family: var(--font-family-ui);
+            font-weight: 600;
+            transition: border-color 0.2s;
+        }
+
+        body[data-theme="dark"] .dropdown-button {
+            background: #3c3c3c;
+            padding: 5px 8px;
+            font-size: var(--font-size-small);
             border-radius: 3px;
+            gap: 5px;
+        }
+
+        .dropdown-button:hover {
+            border-color: var(--accent-primary);
         }
 
         .dropdown-button:after {
             content: '▼';
+            font-size: 10px;
+        }
+
+        body[data-theme="dark"] .dropdown-button:after {
             font-size: 8px;
         }
 
         .dropdown-content {
             display: none;
             position: absolute;
-            background: #2d2d30;
-            border: 1px solid #5a5a5a;
-            border-radius: 3px;
+            background: var(--bg-secondary);
+            border: var(--border-width) solid var(--border-color-input);
+            border-radius: 4px;
             z-index: 1000;
+            min-width: 220px;
+            max-height: 350px;
+            overflow-y: auto;
+            box-shadow: var(--shadow-md);
+            margin-top: 4px;
+        }
+
+        body[data-theme="dark"] .dropdown-content {
+            background: #2d2d30;
+            border-radius: 3px;
             min-width: 200px;
             max-height: 300px;
-            overflow-y: auto;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
         }
 
         .dropdown-content.show {
@@ -127,41 +356,67 @@
         }
 
         .dropdown-item {
-            padding: 6px 10px;
+            padding: 10px 15px;
             cursor: pointer;
             display: flex;
             align-items: center;
+            gap: 10px;
+            font-size: var(--font-size-base);
+            color: var(--text-primary);
+            transition: background 0.2s;
+        }
+
+        body[data-theme="dark"] .dropdown-item {
+            padding: 6px 10px;
             gap: 8px;
-            font-size: 11px;
+            font-size: var(--font-size-small);
         }
 
         .dropdown-item:hover {
-            background: #3e3e42;
+            background: var(--dropdown-hover);
         }
 
         .dropdown-item input[type="checkbox"] {
             cursor: pointer;
+            width: 18px;
+            height: 18px;
+        }
+
+        body[data-theme="light"] .dropdown-item input[type="checkbox"] {
+            accent-color: var(--accent-primary);
         }
 
         .time-range-container {
             width: 100%;
-            padding: 10px 15px;
-            background: #252526;
-            border-bottom: 1px solid #3e3e42;
+            padding: var(--padding-section);
+            background: var(--bg-secondary);
+            border-bottom: var(--border-width) solid var(--border-color);
         }
 
         .time-range-label {
-            font-size: 20px;
-            color: #9cdcfe;
-            margin-bottom: 5px;
+            font-size: 16px;
+            color: var(--text-primary);
+            font-weight: 600;
+            margin-bottom: 8px;
             display: flex;
             align-items: center;
             gap: 10px;
         }
 
-        #timeRangeDisplay {
+        body[data-theme="dark"] .time-range-label {
             font-size: 20px;
-            color: #d4d4d4;
+            color: #9cdcfe;
+            margin-bottom: 5px;
+        }
+
+        #timeRangeDisplay {
+            font-size: 16px;
+            color: var(--text-primary);
+            font-weight: 400;
+        }
+
+        body[data-theme="dark"] #timeRangeDisplay {
+            font-size: 20px;
         }
 
         .range-slider {
@@ -174,7 +429,7 @@
             position: absolute;
             width: 100%;
             height: 6px;
-            background: #3c3c3c;
+            background: var(--range-track);
             top: 12px;
             border-radius: 3px;
         }
@@ -182,7 +437,7 @@
         .range-fill {
             position: absolute;
             height: 6px;
-            background: #0e639c;
+            background: var(--range-fill);
             top: 12px;
             border-radius: 3px;
         }
@@ -200,106 +455,152 @@
         input[type="range"]::-webkit-slider-thumb {
             -webkit-appearance: none;
             appearance: none;
-            width: 16px;
-            height: 16px;
-            background: #569cd6;
+            width: 18px;
+            height: 18px;
+            background: var(--range-thumb);
             cursor: pointer;
             border-radius: 50%;
             pointer-events: all;
-            border: 2px solid #1e1e1e;
+            border: 3px solid var(--bg-secondary);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        body[data-theme="dark"] input[type="range"]::-webkit-slider-thumb {
+            width: 16px;
+            height: 16px;
+            border: 2px solid var(--bg-tertiary);
         }
 
         input[type="range"]::-moz-range-thumb {
-            width: 16px;
-            height: 16px;
-            background: #569cd6;
+            width: 18px;
+            height: 18px;
+            background: var(--range-thumb);
             cursor: pointer;
             border-radius: 50%;
             pointer-events: all;
-            border: 2px solid #1e1e1e;
+            border: 3px solid var(--bg-secondary);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        body[data-theme="dark"] input[type="range"]::-moz-range-thumb {
+            width: 16px;
+            height: 16px;
+            border: 2px solid var(--bg-tertiary);
         }
 
         .stats {
-            background: #252526;
-            padding: 8px 15px;
-            border-bottom: 1px solid #3e3e42;
-            font-size: 11px;
-            color: #858585;
+            background: var(--bg-secondary);
+            padding: 12px 30px;
+            border-bottom: var(--border-width) solid var(--border-color);
+            font-size: var(--font-size-small);
+            color: var(--text-secondary);
             display: flex;
             justify-content: space-between;
+            font-weight: 600;
+        }
+
+        body[data-theme="dark"] .stats {
+            padding: 8px 15px;
+            font-size: var(--font-size-small);
         }
 
         .log-viewer {
             flex: 1;
             overflow: hidden;
             position: relative;
-            background: #1e1e1e;
+            background: var(--bg-tertiary);
         }
 
         .log-container {
             height: 100%;
             overflow-y: auto;
             overflow-x: auto;
+            padding: 15px 30px;
+            font-family: var(--font-family-mono);
+        }
+
+        body[data-theme="dark"] .log-container {
             padding: 5px;
         }
 
         .log-line {
-            padding: 1px 5px;
+            padding: 4px 8px;
             white-space: nowrap;
-            line-height: 1.2;
+            line-height: 1.5;
             border-left: 3px solid transparent;
+            border-radius: 2px;
+            margin-bottom: 2px;
+        }
+
+        body[data-theme="dark"] .log-line {
+            padding: 1px 5px;
+            line-height: 1.2;
+            margin-bottom: 0;
         }
 
         .log-line:hover {
-            background: #2a2d2e;
+            background: var(--log-hover);
+        }
+
+        body[data-theme="light"] .log-line:hover {
+            border-left-color: var(--accent-primary);
         }
 
         .log-timestamp {
-            color: #4ec9b0;
+            color: var(--log-timestamp);
             margin-right: 8px;
         }
 
         .log-level {
             display: inline-block;
-            width: 60px;
+            width: 70px;
             margin-right: 8px;
             font-weight: bold;
         }
 
-        .log-level.FINEST { color: #858585; }
-        .log-level.FINER { color: #9cdcfe; }
-        .log-level.FINE { color: #4ec9b0; }
-        .log-level.CONFIG { color: #dcdcaa; }
-        .log-level.INFO { color: #4fc1ff; }
-        .log-level.WARNING { color: #ce9178; }
-        .log-level.SEVERE { color: #f48771; }
-        .log-level.ERROR { color: #f14c4c; }
+        body[data-theme="dark"] .log-level {
+            width: 60px;
+        }
+
+        .log-level.FINEST { color: var(--log-finest); }
+        .log-level.FINER { color: var(--log-finer); }
+        .log-level.FINE { color: var(--log-fine); }
+        .log-level.CONFIG { color: var(--log-config); }
+        .log-level.INFO { color: var(--log-info); }
+        .log-level.WARNING { color: var(--log-warning); }
+        .log-level.SEVERE { color: var(--log-severe); }
+        .log-level.ERROR { color: var(--log-error); }
 
         .log-source {
-            color: #c586c0;
+            color: var(--log-source);
             margin-right: 8px;
         }
 
         .log-logger {
-            color: #858585;
+            color: var(--log-logger);
             margin-right: 8px;
         }
 
         .log-message {
-            color: #d4d4d4;
+            color: var(--log-message);
         }
 
         .highlight {
-            background: #5a5a0f;
-            color: #ffff00;
+            background: var(--highlight-bg);
+            color: var(--highlight-text);
             font-weight: bold;
+            padding: 2px 4px;
+            border-radius: 3px;
+        }
+
+        body[data-theme="dark"] .highlight {
             padding: 1px 2px;
             border-radius: 2px;
         }
 
         .highlight.keyword2 {
-            background: #4a0f5a;
-            color: #ff00ff;
+            background: var(--highlight2-bg);
+            color: var(--highlight2-text);
         }
 
         .modal {
@@ -310,7 +611,7 @@
             top: 0;
             width: 100%;
             height: 100%;
-            background-color: rgba(0, 0, 0, 0.7);
+            background-color: var(--modal-overlay);
             animation: fadeIn 0.3s;
         }
 
@@ -321,46 +622,91 @@
         }
 
         .modal-content {
-            background: #252526;
-            padding: 20px;
-            border: 1px solid #5a5a5a;
-            border-radius: 5px;
-            max-width: 600px;
+            background: var(--bg-secondary);
+            padding: 30px;
+            border: none;
+            border-radius: 8px;
+            max-width: 650px;
             max-height: 80vh;
             overflow-y: auto;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+            box-shadow: var(--shadow-lg);
+        }
+
+        body[data-theme="dark"] .modal-content {
+            padding: 20px;
+            border: 1px solid var(--border-color-input);
+            border-radius: 5px;
+            max-width: 600px;
         }
 
         .modal-header {
-            font-size: 16px;
-            margin-bottom: 15px;
-            color: #569cd6;
-            border-bottom: 1px solid #3e3e42;
+            font-size: var(--font-size-modal);
+            margin-bottom: 20px;
+            color: var(--text-primary);
+            border-bottom: 3px solid var(--accent-primary);
+            padding-bottom: 12px;
+            font-weight: 700;
+        }
+
+        body[data-theme="dark"] .modal-header {
+            color: var(--accent-secondary);
+            border-bottom: 1px solid var(--border-color);
             padding-bottom: 10px;
+            margin-bottom: 15px;
         }
 
         .modal-body {
+            font-size: var(--font-size-base);
+            line-height: 1.8;
+            color: var(--text-primary);
+        }
+
+        body[data-theme="dark"] .modal-body {
             font-size: 12px;
             line-height: 1.6;
         }
 
         .modal-body ul {
+            margin-left: 25px;
+            margin-top: 12px;
+        }
+
+        body[data-theme="dark"] .modal-body ul {
             margin-left: 20px;
             margin-top: 10px;
         }
 
         .modal-body li {
+            margin: 8px 0;
+        }
+
+        body[data-theme="dark"] .modal-body li {
             margin: 5px 0;
         }
 
+        .modal-body strong {
+            color: var(--text-primary);
+            font-weight: 700;
+        }
+
         .gap-warning {
+            color: var(--accent-secondary);
+            margin-top: 15px;
+            font-weight: 600;
+        }
+
+        body[data-theme="dark"] .gap-warning {
             color: #ce9178;
             margin-top: 10px;
         }
 
         .modal-footer {
-            margin-top: 20px;
+            margin-top: 25px;
             text-align: right;
+        }
+
+        body[data-theme="dark"] .modal-footer {
+            margin-top: 20px;
         }
 
         .loading {
@@ -369,11 +715,18 @@
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            background: #252526;
-            padding: 20px 30px;
-            border: 1px solid #5a5a5a;
-            border-radius: 5px;
+            background: var(--bg-secondary);
+            padding: 30px 40px;
+            border: none;
+            border-radius: 8px;
             z-index: 2001;
+            box-shadow: var(--shadow-lg);
+        }
+
+        body[data-theme="dark"] .loading {
+            padding: 20px 30px;
+            border: 1px solid var(--border-color-input);
+            border-radius: 5px;
         }
 
         .loading.show {
@@ -381,13 +734,27 @@
         }
 
         .spinner {
-            border: 3px solid #3c3c3c;
-            border-top: 3px solid #569cd6;
+            border: 4px solid var(--range-track);
+            border-top: 4px solid var(--accent-primary);
             border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 15px;
+        }
+
+        body[data-theme="dark"] .spinner {
+            border-width: 3px;
+            border-top-width: 3px;
             width: 30px;
             height: 30px;
-            animation: spin 1s linear infinite;
-            margin: 0 auto 10px;
+            margin-bottom: 10px;
+        }
+
+        .loading div {
+            color: var(--text-primary);
+            font-size: 15px;
+            font-weight: 600;
         }
 
         @keyframes spin {
@@ -402,6 +769,10 @@
 
         .search-inputs {
             display: flex;
+            gap: 8px;
+        }
+
+        body[data-theme="dark"] .search-inputs {
             gap: 5px;
         }
 
@@ -411,40 +782,70 @@
             align-items: center;
             justify-content: center;
             height: 100%;
-            color: #858585;
+            color: var(--text-muted);
         }
 
         .empty-state-icon {
+            font-size: 64px;
+            margin-bottom: 15px;
+            opacity: var(--empty-icon-opacity);
+        }
+
+        body[data-theme="dark"] .empty-state-icon {
             font-size: 48px;
             margin-bottom: 10px;
         }
 
         .empty-state-text {
+            font-size: 16px;
+            color: var(--text-secondary);
+        }
+
+        body[data-theme="dark"] .empty-state-text {
             font-size: 14px;
         }
 
         ::-webkit-scrollbar {
+            width: 12px;
+            height: 12px;
+        }
+
+        body[data-theme="dark"] ::-webkit-scrollbar {
             width: 10px;
             height: 10px;
         }
 
         ::-webkit-scrollbar-track {
-            background: #1e1e1e;
+            background: var(--scrollbar-track);
         }
 
         ::-webkit-scrollbar-thumb {
-            background: #424242;
+            background: var(--scrollbar-thumb);
+            border-radius: 6px;
+        }
+
+        body[data-theme="light"] ::-webkit-scrollbar-thumb {
+            border: 2px solid var(--scrollbar-track);
+        }
+
+        body[data-theme="dark"] ::-webkit-scrollbar-thumb {
             border-radius: 5px;
         }
 
         ::-webkit-scrollbar-thumb:hover {
-            background: #4e4e4e;
+            background: var(--scrollbar-thumb-hover);
         }
     </style>
 </head>
-<body>
+<body data-theme="light">
     <div class="header">
-        <h1>Portable OpenRemote Log Analyzer</h1>
+        <div class="header-top">
+            <h1>Portable OpenRemote Log Analyzer</h1>
+            <button class="theme-toggle" onclick="toggleTheme()">
+                <span id="themeIcon">🌙</span>
+                <span id="themeText">Tight Dark</span>
+            </button>
+        </div>
         <div class="controls">
             <div class="control-group">
                 <label>Load Logs:</label>
@@ -534,6 +935,35 @@
         let timeRange = { min: 0, max: 0 };
         let selectedTimeRange = { start: 0, end: 0 };
         let searchDebounceTimer = null;
+
+        // Theme management
+        function toggleTheme() {
+            const body = document.body;
+            const currentTheme = body.getAttribute('data-theme');
+            const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+            body.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+            updateThemeButton(newTheme);
+        }
+
+        function updateThemeButton(theme) {
+            const icon = document.getElementById('themeIcon');
+            const text = document.getElementById('themeText');
+            if (theme === 'light') {
+                icon.textContent = '🌙';
+                text.textContent = 'Tight Dark';
+            } else {
+                icon.textContent = '☀️';
+                text.textContent = 'Light & Friendly';
+            }
+        }
+
+        // Load theme from localStorage
+        function loadTheme() {
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            document.body.setAttribute('data-theme', savedTheme);
+            updateThemeButton(savedTheme);
+        }
 
         // Parse log line
         function parseLogLine(line) {
@@ -816,7 +1246,7 @@
 
             if (filteredLogs.length > maxLogs) {
                 html += `
-                    <div class="log-line" style="color: #ce9178; font-style: italic;">
+                    <div class="log-line" style="color: var(--accent-secondary); font-style: italic;">
                         ... and ${filteredLogs.length - maxLogs} more lines (use filters to narrow down results)
                     </div>
                 `;
@@ -1054,6 +1484,7 @@
 
         // Initialize
         document.addEventListener('DOMContentLoaded', () => {
+            loadTheme();
             console.log('OpenRemote Log Analyzer ready');
         });
     </script>

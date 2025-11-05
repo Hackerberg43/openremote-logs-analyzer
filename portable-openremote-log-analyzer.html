@@ -641,26 +641,16 @@
             height: 100%;
             overflow-y: auto;
             overflow-x: auto;
-            padding: 15px 30px;
+            padding: 5px;
             font-family: var(--font-family-mono);
         }
 
-        body[data-theme="dark"] .log-container {
-            padding: 5px;
-        }
-
         .log-line {
-            padding: 4px 8px;
+            padding: 1px 5px;
             white-space: nowrap;
-            line-height: 1.5;
+            line-height: 1.2;
             border-left: 3px solid transparent;
             border-radius: 2px;
-            margin-bottom: 2px;
-        }
-
-        body[data-theme="dark"] .log-line {
-            padding: 1px 5px;
-            line-height: 1.2;
             margin-bottom: 0;
         }
 
@@ -963,7 +953,7 @@
         }
     </style>
 </head>
-<body data-theme="light">
+<body data-theme="dark">
     <div class="header">
         <div class="header-top">
             <h1>Portable OpenRemote Log Analyzer</h1>
@@ -1100,7 +1090,7 @@
 
         // Load theme from localStorage
         function loadTheme() {
-            const savedTheme = localStorage.getItem('theme') || 'light';
+            const savedTheme = localStorage.getItem('theme') || 'dark';
             document.body.setAttribute('data-theme', savedTheme);
             updateThemeButton(savedTheme);
         }

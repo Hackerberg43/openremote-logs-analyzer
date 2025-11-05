@@ -419,6 +419,120 @@
             font-size: 20px;
         }
 
+        .time-range-controls {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+            margin-top: 12px;
+            flex-wrap: wrap;
+        }
+
+        body[data-theme="dark"] .time-range-controls {
+            gap: 10px;
+            margin-top: 8px;
+        }
+
+        .time-input-group {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        body[data-theme="dark"] .time-input-group {
+            gap: 5px;
+        }
+
+        .time-input-group label {
+            font-size: 13px;
+            color: var(--text-primary);
+            font-weight: 600;
+            white-space: nowrap;
+        }
+
+        body[data-theme="dark"] .time-input-group label {
+            font-size: 11px;
+        }
+
+        input[type="datetime-local"] {
+            background: var(--bg-secondary);
+            border: var(--border-width) solid var(--border-color-input);
+            color: var(--text-primary);
+            padding: 6px 10px;
+            border-radius: 4px;
+            font-size: 13px;
+            font-family: var(--font-family-ui);
+            transition: border-color 0.2s;
+        }
+
+        body[data-theme="dark"] input[type="datetime-local"] {
+            background: #3c3c3c;
+            padding: 4px 6px;
+            font-size: 11px;
+            border-radius: 3px;
+        }
+
+        input[type="datetime-local"]:focus {
+            outline: none;
+            border-color: var(--accent-primary);
+        }
+
+        .time-apply-btn {
+            background: var(--accent-primary);
+            border: none;
+            color: var(--button-text);
+            padding: 6px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 600;
+            font-family: var(--font-family-ui);
+            transition: all 0.2s ease;
+            box-shadow: var(--shadow-sm);
+        }
+
+        body[data-theme="dark"] .time-apply-btn {
+            padding: 4px 12px;
+            font-size: 11px;
+            border-radius: 3px;
+        }
+
+        .time-apply-btn:hover {
+            background: var(--accent-hover);
+        }
+
+        body[data-theme="light"] .time-apply-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+        }
+
+        .time-reset-btn {
+            background: var(--bg-tertiary);
+            border: var(--border-width) solid var(--border-color-input);
+            color: var(--text-primary);
+            padding: 6px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 600;
+            font-family: var(--font-family-ui);
+            transition: all 0.2s ease;
+        }
+
+        body[data-theme="dark"] .time-reset-btn {
+            padding: 4px 10px;
+            font-size: 11px;
+            border-radius: 3px;
+        }
+
+        .time-reset-btn:hover {
+            border-color: var(--accent-primary);
+            background: var(--bg-secondary);
+        }
+
+        body[data-theme="light"] .time-reset-btn:hover {
+            transform: translateY(-1px);
+        }
+
         .range-slider {
             position: relative;
             height: 30px;
@@ -894,6 +1008,18 @@
             <input type="range" id="rangeStart" min="0" max="100" value="0" oninput="updateTimeRange()">
             <input type="range" id="rangeEnd" min="0" max="100" value="100" oninput="updateTimeRange()">
         </div>
+        <div class="time-range-controls">
+            <div class="time-input-group">
+                <label for="dateTimeStart">Start:</label>
+                <input type="datetime-local" id="dateTimeStart" step="1">
+            </div>
+            <div class="time-input-group">
+                <label for="dateTimeEnd">End:</label>
+                <input type="datetime-local" id="dateTimeEnd" step="1">
+            </div>
+            <button class="time-apply-btn" onclick="applyTimeRangeFromInputs()">Apply</button>
+            <button class="time-reset-btn" onclick="resetTimeRange()">Reset Range</button>
+        </div>
     </div>
 
     <div class="stats" id="stats">
@@ -1310,7 +1436,88 @@
             document.getElementById('timeRangeDisplay').textContent =
                 `${formatDateTimeCustom(startDate)} → ${formatDateTimeCustom(endDate)}`;
 
+            // Update datetime inputs
+            updateDateTimeInputs();
+
             applyFilters();
+        }
+
+        function updateDateTimeInputs() {
+            const startDate = new Date(selectedTimeRange.start);
+            const endDate = new Date(selectedTimeRange.end);
+
+            // Format for datetime-local input (YYYY-MM-DDTHH:mm:ss)
+            document.getElementById('dateTimeStart').value = formatDateTimeForInput(startDate);
+            document.getElementById('dateTimeEnd').value = formatDateTimeForInput(endDate);
+        }
+
+        function formatDateTimeForInput(date) {
+            const year = date.getFullYear();
+            const month = String(date.getMonth() + 1).padStart(2, '0');
+            const day = String(date.getDate()).padStart(2, '0');
+            const hours = String(date.getHours()).padStart(2, '0');
+            const minutes = String(date.getMinutes()).padStart(2, '0');
+            const seconds = String(date.getSeconds()).padStart(2, '0');
+            return `${year}-${month}-${day}T${hours}:${minutes}:${seconds}`;
+        }
+
+        function applyTimeRangeFromInputs() {
+            const startInput = document.getElementById('dateTimeStart').value;
+            const endInput = document.getElementById('dateTimeEnd').value;
+
+            if (!startInput || !endInput) {
+                alert('Please select both start and end times');
+                return;
+            }
+
+            const startMs = new Date(startInput).getTime();
+            const endMs = new Date(endInput).getTime();
+
+            // Validate range
+            if (startMs >= endMs) {
+                alert('Start time must be before end time');
+                return;
+            }
+
+            if (startMs < timeRange.min || endMs > timeRange.max) {
+                alert('Selected time range is outside the available log data range');
+                return;
+            }
+
+            // Update selected range
+            selectedTimeRange.start = startMs;
+            selectedTimeRange.end = endMs;
+
+            // Update slider positions
+            const totalRange = timeRange.max - timeRange.min;
+            const startPercent = ((startMs - timeRange.min) / totalRange) * 100;
+            const endPercent = ((endMs - timeRange.min) / totalRange) * 100;
+
+            document.getElementById('rangeStart').value = startPercent;
+            document.getElementById('rangeEnd').value = endPercent;
+
+            // Update visual elements
+            const rangeFill = document.getElementById('rangeFill');
+            rangeFill.style.left = startPercent + '%';
+            rangeFill.style.width = (endPercent - startPercent) + '%';
+
+            // Update display
+            const startDate = new Date(startMs);
+            const endDate = new Date(endMs);
+            document.getElementById('timeRangeDisplay').textContent =
+                `${formatDateTimeCustom(startDate)} → ${formatDateTimeCustom(endDate)}`;
+
+            applyFilters();
+        }
+
+        function resetTimeRange() {
+            selectedTimeRange.start = timeRange.min;
+            selectedTimeRange.end = timeRange.max;
+
+            document.getElementById('rangeStart').value = 0;
+            document.getElementById('rangeEnd').value = 100;
+
+            updateTimeRange();
         }
 
         function updateTimeRangeUI() {

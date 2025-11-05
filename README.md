@@ -1,0 +1,190 @@
+# Portable OpenRemote Log Analyzer
+
+A lightweight, portable, single-file log analyzer for OpenRemote trace logs. No installation required - just open in your browser!
+
+## Features
+
+- **Multi-file support** - Load entire directories of log files, automatically merged and sorted chronologically
+- **Dual keyword search** - Search for two keywords simultaneously with color-coded highlighting
+- **Advanced filtering** - Filter by log level, process source, and time range
+- **Time range slider** - Visual dual-handle slider to focus on specific time periods
+- **Gap detection** - Automatically detects and reports gaps in log data (>10 minutes)
+- **Performance optimized** - Handles large log files efficiently with debounced search and optimized rendering
+- **Dark theme** - Easy on the eyes for long analysis sessions
+- **Completely portable** - Single HTML file, no dependencies or installation required
+
+## Browser Requirements
+
+### Supported Browsers
+
+This analyzer requires a modern web browser that supports:
+- ES6 JavaScript (arrow functions, template literals, etc.)
+- HTML5 File API
+- CSS Flexbox and Grid
+
+**Recommended Browsers:**
+- **Google Chrome** 90+ (recommended for best performance)
+- **Microsoft Edge** 90+
+- **Firefox** 88+
+- **Safari** 14+
+- **Opera** 76+
+
+### Required Features
+- JavaScript must be enabled
+- File API support for loading local files
+- LocalStorage support (optional, for future enhancements)
+
+### Not Supported
+- Internet Explorer (any version)
+- Very old browser versions (pre-2021)
+
+## How to Use
+
+### Getting Started
+
+1. **Open the analyzer**
+   - Double-click `portable-openremote-log-analyzer.html` to open it in your default browser
+   - Or right-click and select "Open with" → choose your preferred browser
+
+2. **Load log files**
+   - Click the "Choose Files" button under "Load Logs"
+   - Select a folder containing your OpenRemote log files (e.g., `./example logs`)
+   - Click "Process" to parse and analyze the logs
+
+3. **View analysis summary**
+   - A popup will appear showing:
+     - Total time range covered by the logs
+     - Total number of log entries
+     - Log level distribution
+     - Detected gaps in the data (if any)
+
+### Features & Controls
+
+#### Search
+- **Keyword 1 & 2** - Enter search terms to filter logs
+- Search is debounced (1 second delay) for performance
+- Matching text is highlighted in different colors for each keyword
+
+#### Filtering
+
+**Log Level Filter**
+- Click the dropdown to select which log levels to display
+- Supports: FINEST, FINER, FINE, CONFIG, INFO, WARNING, SEVERE, ERROR
+- Check/uncheck to show/hide specific levels
+
+**Process Source Filter**
+- Filter by ContainerExecutor thread (e.g., ContainerExecutor-2014)
+- Useful for tracking specific execution threads
+
+**Time Range Slider**
+- Drag the left handle to set the start time
+- Drag the right handle to set the end time
+- Only logs within the selected range will be displayed
+- Current selection is shown above the slider
+
+**Clear Filters Button**
+- Resets all filters to their default state
+- Clears search terms
+- Restores full time range
+
+### Performance Tips
+
+- The analyzer limits display to 5,000 log entries at once for performance
+- Use filters to narrow down results when dealing with very large log sets
+- Search is debounced to avoid performance issues while typing
+- Horizontal scrolling is available for long log lines
+
+## Log Format
+
+The analyzer expects OpenRemote log files in the following format:
+
+```
+2025-11-05 08:05:04.191  FINER   [ContainerExecutor-2014] nremote.manager.event.ClientEventService : Message text
+```
+
+**Format breakdown:**
+- Timestamp: `YYYY-MM-DD HH:MM:SS.mmm`
+- Log Level: `FINEST`, `FINER`, `FINE`, `CONFIG`, `INFO`, `WARNING`, `SEVERE`, `ERROR`
+- Process Source: `[ContainerExecutor-XXXX]` or similar
+- Logger: Java class name
+- Message: Log message text
+
+## File Naming
+
+The analyzer accepts files with `.log` in the filename:
+- `openremote.log`
+- `openremote.log.0`
+- `openremote.log.1`
+- `openremote.log.12`
+- Custom `.txt` files are also supported
+
+## Statistics Display
+
+The bottom bar shows:
+- **Total**: Total number of log entries loaded
+- **Filtered**: Number of entries matching current filters
+- **Percentage**: Percentage of total logs displayed
+- **Duration**: Time span covered by the filtered logs
+
+## Color Coding
+
+- **Timestamp**: Teal
+- **Log Levels**:
+  - FINEST: Gray
+  - FINER: Light Blue
+  - FINE: Teal
+  - CONFIG: Yellow
+  - INFO: Bright Blue
+  - WARNING: Orange
+  - SEVERE: Light Red
+  - ERROR: Red
+- **Process Source**: Purple
+- **Logger**: Gray
+- **Search Highlight 1**: Yellow background
+- **Search Highlight 2**: Magenta background
+
+## Troubleshooting
+
+### Logs won't load
+- Ensure you've selected files with `.log` in their name
+- Check that the files contain valid log data in the expected format
+- Make sure JavaScript is enabled in your browser
+
+### Performance is slow
+- Use filters to reduce the number of displayed entries
+- Close other browser tabs to free up memory
+- Try using Chrome or Edge for better performance
+
+### Search not working
+- Wait 1 second after typing (search is debounced)
+- Ensure your search term appears in the log content
+- Check if other filters are hiding the results
+
+### Browser compatibility issues
+- Update to the latest version of your browser
+- Try a different recommended browser (Chrome, Edge, Firefox)
+- Ensure JavaScript is enabled
+
+## Privacy & Security
+
+- **Fully local** - All processing happens in your browser
+- **No network requests** - Your log data never leaves your computer
+- **No tracking** - No analytics or telemetry
+- **No dependencies** - No external libraries or resources loaded
+
+## Technical Details
+
+- **Technology**: Pure HTML5, CSS3, and vanilla JavaScript
+- **File size**: ~50KB (single file)
+- **Memory usage**: Efficient parsing and rendering
+- **Rendering limit**: 5,000 lines displayed at once
+- **Search debounce**: 1 second
+- **Gap detection threshold**: 10 minutes
+
+## License
+
+This tool is provided as-is for analyzing OpenRemote log files.
+
+## Support
+
+For issues or questions, refer to your OpenRemote documentation or contact your system administrator.

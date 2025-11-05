@@ -1,6 +1,6 @@
 # Portable OpenRemote Log Analyzer
 
-A lightweight, portable, single-file log analyzer for OpenRemote trace logs. No installation required - just open in your browser!
+A lightweight, portable, single-file log analyzer for OpenRemote manager trace logs. No installation required - just open in your browser!
 
 ## Features
 
